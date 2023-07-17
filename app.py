@@ -1,10 +1,13 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+import os
+from flask import Flask, render_template, request, redirect, url_for, flash, send_from_directory
 import json
-import os.path
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.secret_key = 'hewqia23e'
+
+UPLOAD_FOLDER = os.path.join(app.root_path, 'static', 'uploads')  # Diretório para salvar os arquivos enviados
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
 @app.route('/')
@@ -29,8 +32,13 @@ def your_url():
             urls[request.form['code']] = {'Url': [request.form['url']]}
         else:
             f = request.files['file']
+            if f.filename == '':
+                flash('No file selected')
+                return redirect(url_for('home'))
+
             full_name = request.form['code'] + secure_filename(f.filename)
-            f.save('/Users/brunoscala/ProjetosFlask/projeto1' + full_name)
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], full_name)
+            f.save(file_path)
             urls[request.form['code']] = {'file': full_name}
 
         with open('urls.json', 'w') as url_file:
@@ -49,7 +57,14 @@ def redirect_to_url(code):
             if code in urls.keys():
                 if 'Url' in urls[code].keys():
                     return redirect(urls[code]['Url'][0])
+                elif 'file' in urls[code].keys():
+                    return send_from_directory(app.config['UPLOAD_FOLDER'], urls[code]['file'])
     return redirect(url_for('home'))
 
-if __name__=="__main__":
+
+
+
+
+
+if __name__ == "__main__":
     app.run(debug=True)

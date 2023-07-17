@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>URL SHORTENER</title>
+</head>
+<body>
+
+<h1>URL SHORTENER</h1>
+
+{% for message in get_flashed_messages() %}
+<h2>{{message}}</h2>
+{% endfor %}
+
+<form action="your-url" METHOD="post">
+    <label for="url">Website Url</label>
+    <input type="url" name="url" value="" required><br>
+    <label for="code">Short Name</label>
+    <input type="text" name="code" value="" required><br>
+    <input type="submit" value="Shorten"><br><br>
+</form>
+
+<form action="your-url" METHOD="post" enctype="multipart/form-data">
+    <label for="file">Website Url    </label>
+    <input type="file" name="file" value="" required><br>
+    <label for="code">Short Name</label>
+    <input type="text" name="code" value="" required><br>
+    <input type="submit" value="Shorten">
+</form>
+
+</body>
+</html>

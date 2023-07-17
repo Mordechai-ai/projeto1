@@ -46,9 +46,10 @@ def redirect_to_url(code):
     if os.path.exists('urls.json'):
         with open('urls.json') as urls_file:
             urls = json.load(urls_file)
-    if code in urls.keys():
-        if 'url' in urls[code].keys():
-                    return redirect(urls[code]['url'])
+            if code in urls.keys():
+                if 'Url' in urls[code].keys():
+                    return redirect(urls[code]['Url'][0])
+    return redirect(url_for('home'))
 
 if __name__=="__main__":
     app.run(debug=True)
